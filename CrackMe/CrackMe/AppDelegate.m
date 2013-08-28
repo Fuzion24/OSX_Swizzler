@@ -13,7 +13,7 @@
     if([self isValidSerial: currentSerial]){
       [self.registrationStatus setStringValue:@"Registered!"];
     }else {
-      [self.registrationStatus setStringValue:@"Not Registered"];
+      [self.registrationStatus setStringValue:@"Incorrect Serial: Not Registered"];
     }
 }
 

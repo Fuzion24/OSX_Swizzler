@@ -13,7 +13,6 @@
 @property (assign) IBOutlet NSWindow *window;
 @property (weak) IBOutlet NSButton *registrationButton;
 @property (weak) IBOutlet NSTextField *registrationTextBox;
-
 @property (weak) IBOutlet NSTextField *registrationStatus;
 
 - (IBAction)doRegistration:(id)sender;
