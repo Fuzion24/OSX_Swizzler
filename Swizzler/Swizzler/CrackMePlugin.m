@@ -12,9 +12,10 @@
 @implementation CrackMePlugin
 
 - (BOOL) isValidSerial:(NSString*)key{
-    NSLog(@"Tried to get value for %@", key, nil);
+    NSLog(@"Tried to get validity for serial: %@", key, nil);
     return true;
 }
+
 /**
  * A special method called by SIMBL once the application has started and all classes are initialized.
  */
