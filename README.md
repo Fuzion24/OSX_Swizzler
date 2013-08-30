@@ -95,10 +95,11 @@ The actual meat of the hack:
 ```
 
 Since SIMBL is somewhat depreciated, I chose to use EasySIMBL:
-[EasySIMBL](https://raw.github.com/Fuzion24/OSX_Swizzler/master/Docs/EasySIMBL.png)
+![EasySIMBL](https://raw.github.com/Fuzion24/OSX_Swizzler/master/Docs/EasySIMBL.png)
 
+and now:
+![Cracked](https://raw.github.com/Fuzion24/OSX_Swizzler/master/Docs/cracked.png)
 
 ---Notes---
 I ran into some issues using SIMBL with some applications.  For instance, I wanted to change the behavior of a function that was called immediately upon startup of the application.  SIML has some lag time before being injected into the app and therefore was not properly hooking the early function call.
-
 
