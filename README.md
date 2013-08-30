@@ -3,7 +3,7 @@ OSX Swizzler
 
 This repo is an example of cracking an Objective-C app by using SIMBL.  SIMBL injects code into an application during its load.  We will try to create a plugin that hooks the registration scheme of a simple app we will build.
 
-(SIMBL)[http://www.culater.net/software/SIMBL/SIMBL.php] is designed to load bundles into an application to extend/change functionality of an app.
+[SIMBL](http://www.culater.net/software/SIMBL/SIMBL.php) is designed to load bundles into an application to extend/change functionality of an app.
 
 Our target application contains a simple 'registration scheme' that just checks the validity of an input key and notifies the user if the application is registered or not:
 
@@ -56,7 +56,7 @@ class-dump CrackMe
 The only function it looks like we really care about is `isValidSerial` that returns a boolean.  
 Our general approach here is going to be to hook calls to [AppDelegate isValidSerial:] and replace it with our own function -- something that always returns true.
 
-The tutorial I followed to create the bundle (SIMBL tutorial)[https://code.google.com/p/simbl/wiki/Tutorial]
+The tutorial I followed to create the bundle [SIMBL tutorial](https://code.google.com/p/simbl/wiki/Tutorial)
 
 While developing the SIMBL plugin, I found it easier to symlink the bundle into the plugin folder rather than having to manually copy the bundle after every build:
 ```bash
@@ -95,6 +95,10 @@ The actual meat of the hack:
 ```
 
 Since SIMBL is somewhat depreciated, I chose to use EasySIMBL:
-(EasySIMBL)[https://raw.github.com/Fuzion24/OSX_Swizzler/master/Docs/EasySIMBL.png]
+[EasySIMBL](https://raw.github.com/Fuzion24/OSX_Swizzler/master/Docs/EasySIMBL.png)
+
+
+---Notes---
+I ran into some issues using SIMBL with some applications.  For instance, I wanted to change the behavior of a function that was called immediately upon startup of the application.  SIML has some lag time before being injected into the app and therefore was not properly hooking the early function call.
 
 
