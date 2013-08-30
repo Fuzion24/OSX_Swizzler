@@ -94,3 +94,7 @@ The actual meat of the hack:
 @end
 ```
 
+Since SIMBL is somewhat depreciated, I chose to use EasySIMBL:
+(EasySIMBL)[https://raw.github.com/Fuzion24/OSX_Swizzler/master/Docs/EasySIMBL.png]
+
+
