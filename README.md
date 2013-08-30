@@ -1,7 +1,15 @@
 OSX Swizzler
 ============
 
-For demonstration purposes, I built a demo application that essentially does nothing.  It contains a simple 'registration scheme' that just checks the validity of an input key and notifies the user if the application is registered or not.  Our goal here is to crack this application without making binary modifications to the original app.  Although we have the source code for this app, we will pretend that we are doing some black box analysis on it.  In order to gain a high level view of what is going on here, we can dump the class and method structure using the very useful tool `class-dump`.  
+This repo is an example of cracking an Objective-C app by using SIMBL.  SIMBL injects code into an application during its load.  We will try to create a plugin that hooks the registration scheme of a simple app we will build.
+
+(SIMBL)[http://www.culater.net/software/SIMBL/SIMBL.php] is designed to load bundles into an application to extend/change functionality of an app.
+
+Our target application contains a simple 'registration scheme' that just checks the validity of an input key and notifies the user if the application is registered or not:
+
+![Normal App](https://raw.github.com/Fuzion24/OSX_Swizzler/master/Docs/baseScreenshot.png)
+
+Our goal here is to crack this application without making binary modifications to the original app.  Although we have the source code for this app, we will pretend that we are doing some black box analysis on it.  In order to gain a high level view of what is going on here, we can dump the class and method structure using the very useful tool `class-dump`.  
 Below is the (slightly redacted) output of class-dump:
 ```
 class-dump CrackMe
@@ -46,14 +54,43 @@ class-dump CrackMe
 ```
 
 The only function it looks like we really care about is `isValidSerial` that returns a boolean.  
+Our general approach here is going to be to hook calls to [AppDelegate isValidSerial:] and replace it with our own function -- something that always returns true.
 
-
-Our general approach here is going to be to hook calls to [AppDelegate isValidSerial:] and replace it with our own function.
-We can do so by making a SIMBL plugin and do some method swizzling.  
+The tutorial I followed to create the bundle (SIMBL tutorial)[https://code.google.com/p/simbl/wiki/Tutorial]
 
 While developing the SIMBL plugin, I found it easier to symlink the bundle into the plugin folder rather than having to manually copy the bundle after every build:
 ```bash
 ln -s /Users/fuzion24/Library/Developer/Xcode/DerivedData/Swizzler-awlqvopkqunralfrlyrqcwxoipui/Build/Products/Debug/Swizzler.bundle ~/Library/Application\ Support/SIMBL/Plugins
 ```
 
-Demonstrates cracking an app without modifying it using SIMBL/method swizzling
+The actual meat of the hack:
+
+```obj-c
+@implementation CrackMePlugin
+
+- (BOOL) isValidSerial:(NSString*)key{
+    NSLog(@"Tried to get validity for serial: %@", key, nil);
+    return true;
+}
+
+/**
+ * load is a special method called by SIMBL once the application has started and all classes are initialized.
+ */
++ (void) load
+{
+    
+    NSLog(@"CrackMePlugin installed");
+    
+    Class appDelegate = objc_getClass("AppDelegate");
+    Class this = self.class;
+    
+    Method instMeth = class_getInstanceMethod(this, @selector(isValidSerial:));
+    IMP haxxed = method_getImplementation(instMeth);
+    
+    Method origValidSerialCheck    = class_getInstanceMethod(appDelegate, @selector(isValidSerial:));
+    
+    method_setImplementation(origValidSerialCheck, haxxed);
+}
+@end
+```
+
